@@ -4,6 +4,7 @@ import {
   fontSizeOptions,
   backgroundColors,
   contentWidthArr,
+  defaultArticleState,
 } from '@/constants/articleProps';
 import { ArrowButton } from '@/ui/arrow-button';
 import { Button } from '@/ui/button';
@@ -14,8 +15,6 @@ import { Separator } from '@/ui/separator/Separator';
 import { Text } from '@/ui/text';
 import { clsx } from 'clsx';
 import { useState, useRef } from 'react';
-
-import type { defaultArticleState } from '@/constants/articleProps';
 
 import styles from './ArticleParamsForm.module.scss';
 
@@ -68,11 +67,12 @@ export const ArticleParamsForm = ({
   };
 
   const handleReset = (): void => {
-    setSelectedFont(initialSettings.fontFamilyOption);
-    setSelectedFontSize(initialSettings.fontSizeOption);
-    setSelectedFontColor(initialSettings.fontColor);
-    setSelectedBackgroundColor(initialSettings.backgroundColor);
-    setSelectedContentWidth(initialSettings.contentWidth);
+    setSelectedFont(defaultArticleState.fontFamilyOption);
+    setSelectedFontSize(defaultArticleState.fontSizeOption);
+    setSelectedFontColor(defaultArticleState.fontColor);
+    setSelectedBackgroundColor(defaultArticleState.backgroundColor);
+    setSelectedContentWidth(defaultArticleState.contentWidth);
+    onApply(defaultArticleState);
   };
 
   return (
