@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
-import arrow from 'src/images/arrow.svg';
+
+import arrow from '../../images/arrow.svg';
 
 import styles from './ArrowButton.module.scss';
 

@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
 import { useRef } from 'react';
-import { Text } from 'src/ui/text';
 
+import { Text } from '../text';
 import { isFontFamilyClass } from './helpers/isFontFamilyClass';
 import { useEnterOptionSubmit } from './hooks/useEnterOptionSubmit';
 
