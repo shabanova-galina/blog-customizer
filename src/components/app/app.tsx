@@ -8,9 +8,7 @@ import { Article } from '../article/Article';
 import styles from './app.module.scss';
 
 export const App = (): React.JSX.Element => {
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [currentSettings, setCurrentSettings] = useState(defaultArticleState);
-  const closeForm = (): void => setIsFormOpen(false);
   return (
     <main
       className={clsx(styles.main)}
@@ -24,13 +22,7 @@ export const App = (): React.JSX.Element => {
         } as CSSProperties
       }
     >
-      <ArticleParamsForm
-        isOpen={isFormOpen}
-        onToggle={() => setIsFormOpen((prev) => !prev)}
-        onClose={closeForm}
-        onApply={setCurrentSettings}
-        initialSettings={currentSettings}
-      />
+      <ArticleParamsForm onApply={setCurrentSettings} />
       <Article />
     </main>
   );

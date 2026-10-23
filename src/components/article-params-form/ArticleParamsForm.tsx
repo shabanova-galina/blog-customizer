@@ -16,72 +16,54 @@ import { Text } from '@/ui/text';
 import { clsx } from 'clsx';
 import { useState, useRef } from 'react';
 
+import type { OptionType } from '@/constants/articleProps';
+
 import styles from './ArticleParamsForm.module.scss';
 
-type ArticleSettings = typeof defaultArticleState;
-
 type Props = {
-  isOpen: boolean;
-  onToggle: () => void;
-  onClose: () => void;
-  onApply: (settings: ArticleSettings) => void;
-  initialSettings: ArticleSettings;
+  onApply: (settings: typeof defaultArticleState) => void;
 };
 
-export const ArticleParamsForm = ({
-  isOpen,
-  onToggle,
-  onClose,
-  onApply,
-  initialSettings,
-}: Props): React.JSX.Element => {
+export const ArticleParamsForm = ({ onApply }: Props): React.JSX.Element => {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const onToggle = (): void => setIsFormOpen((prev) => !prev);
+  const closeForm = (): void => setIsFormOpen(false);
+
   const rootRef = useRef<HTMLDivElement | null>(null);
   useOutsideClickClose({
-    isOpen,
+    isOpen: isFormOpen,
     rootRef,
-    onChange: onClose,
+    onChange: closeForm,
   });
 
-  const [selectedFont, setSelectedFont] = useState(initialSettings.fontFamilyOption);
-  const [selectedFontSize, setSelectedFontSize] = useState(
-    initialSettings.fontSizeOption
-  );
-  const [selectedFontColor, setSelectedFontColor] = useState(initialSettings.fontColor);
-  const [selectedBackgroundColor, setSelectedBackgroundColor] = useState(
-    initialSettings.backgroundColor
-  );
-  const [selectedContentWidth, setSelectedContentWidth] = useState(
-    initialSettings.contentWidth
-  );
+  const [formState, setFormState] =
+    useState<typeof defaultArticleState>(defaultArticleState);
+
+  const updateFormField = (
+    field: keyof typeof defaultArticleState
+  ): ((value: OptionType) => void) => {
+    return (value: OptionType) => {
+      setFormState((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    };
+  };
 
   const handleApply = (): void => {
-    const newSettings: ArticleSettings = {
-      fontFamilyOption: selectedFont,
-      fontSizeOption: selectedFontSize,
-      fontColor: selectedFontColor,
-      backgroundColor: selectedBackgroundColor,
-      contentWidth: selectedContentWidth,
-    };
-    onApply(newSettings);
-    onClose();
+    onApply(formState);
+    closeForm();
   };
 
   const handleReset = (): void => {
-    setSelectedFont(defaultArticleState.fontFamilyOption);
-    setSelectedFontSize(defaultArticleState.fontSizeOption);
-    setSelectedFontColor(defaultArticleState.fontColor);
-    setSelectedBackgroundColor(defaultArticleState.backgroundColor);
-    setSelectedContentWidth(defaultArticleState.contentWidth);
+    setFormState(defaultArticleState);
     onApply(defaultArticleState);
   };
 
   return (
-    <>
-      <ArrowButton isOpen={isOpen} onClick={onToggle} />
-      <aside
-        ref={rootRef}
-        className={clsx(styles.container, { [styles.container_open]: isOpen })}
-      >
+    <div ref={rootRef}>
+      <ArrowButton isOpen={isFormOpen} onClick={onToggle} />
+      <aside className={clsx(styles.container, { [styles.container_open]: isFormOpen })}>
         <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
           <Text size={31} weight={800} uppercase={true}>
             Задайте параметры
@@ -90,34 +72,34 @@ export const ArticleParamsForm = ({
             title="Шрифт"
             placeholder="Выберите шрифт"
             options={fontFamilyOptions}
-            selected={selectedFont}
-            onChange={(newOption) => setSelectedFont(newOption)}
+            selected={formState.fontFamilyOption}
+            onChange={updateFormField('fontFamilyOption')}
           />
           <RadioGroup
             name="sizes"
             options={fontSizeOptions}
             title="Размер шрифта"
-            selected={selectedFontSize}
-            onChange={setSelectedFontSize}
+            selected={formState.fontSizeOption}
+            onChange={updateFormField('fontSizeOption')}
           />
           <Select
             title="цвет шрифта"
             options={fontColors}
-            selected={selectedFontColor}
-            onChange={(newOption) => setSelectedFontColor(newOption)}
+            selected={formState.fontColor}
+            onChange={updateFormField('fontColor')}
           />
           <Separator />
           <Select
             title="цвет фона"
             options={backgroundColors}
-            selected={selectedBackgroundColor}
-            onChange={(newOption) => setSelectedBackgroundColor(newOption)}
+            selected={formState.backgroundColor}
+            onChange={updateFormField('backgroundColor')}
           />
           <Select
             title="ширина контента"
             options={contentWidthArr}
-            selected={selectedContentWidth}
-            onChange={(newOption) => setSelectedContentWidth(newOption)}
+            selected={formState.contentWidth}
+            onChange={updateFormField('contentWidth')}
           />
           <div className={styles.bottomContainer}>
             <Button
@@ -135,6 +117,6 @@ export const ArticleParamsForm = ({
           </div>
         </form>
       </aside>
-    </>
+    </div>
   );
 };
