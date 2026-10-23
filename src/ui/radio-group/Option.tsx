@@ -1,6 +1,6 @@
 import { useRef } from 'react';
-import { Text } from 'src/ui/text';
 
+import { Text } from '../text';
 import { useEnterSubmit } from './hooks/useEnterSubmit';
 
 import type { OptionType } from 'src/constants/articleProps';
